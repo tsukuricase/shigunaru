@@ -1,6 +1,17 @@
 [package]
 name = "shigunaru"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A lightweight reactive signals library in Rust"
+repository = "https://github.com/yourusername/shigunaru"
+license = "MIT"
+readme = "README.md"
+keywords = ["reactive", "signals", "state-management"]
+categories = ["rust-patterns"]
 
 [dependencies]
+
+[[example]]
+name = "counter"
+path = "examples/counter.rs"
