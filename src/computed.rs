@@ -77,40 +77,15 @@ where
         self.cached_value.borrow().clone().unwrap()
     }
     
-    /// 获取底层信号的引用
-    ///
-    /// 可用于订阅此计算信号的变化
     pub fn signal(&self) -> &Signal<T> {
         &self.signal
     }
 }
 
-/// 创建计算信号
-///
-/// # 参数
-///
-/// * `f` - 计算函数，返回计算结果
-///
-/// # 示例
-///
-/// ```
-/// use shigunaru::{Signal, create_computed};
-///
-/// let counter = Signal::new(1);
-/// let counter_for_computed = counter.clone();
-/// 
-/// let doubled = create_computed(move || {
-///     *counter_for_computed.get().borrow() * 2
-/// });
-///
-/// assert_eq!(doubled.value(), 2);
-/// counter.set(5);
-/// assert_eq!(doubled.value(), 10);
-/// ```
+
 pub fn create_computed<T: Clone + 'static, F: Fn() -> T + 'static>(f: F) -> ComputedSignal<T, F> {
     let computed = ComputedSignal::new(f);
     
-    // 初始化时执行一次以建立依赖关系
     computed.value();
     
     computed

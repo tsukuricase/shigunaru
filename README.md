@@ -1,6 +1,6 @@
 # Shigunaru
 
-A lightweight reactive signals library implemented in Rust. Shigunaru (シグナル) means "signal" in Japanese, reflecting the core concept of this library.
+A lightweight reactive signals library implemented in Rust. 
 
 ## Features
 
