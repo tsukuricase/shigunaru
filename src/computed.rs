@@ -5,11 +5,8 @@ use std::collections::HashSet;
 use crate::signal::Signal;
 use crate::registry::{set_current_computed, register_dependent};
 
-/// 计算信号状态
 pub struct ComputedState {
-    /// 是否需要重新计算
     pub dirty: bool,
-    /// 依赖信号的ID集合
     pub dependencies: HashSet<usize>,
 }
 
@@ -22,22 +19,14 @@ impl Default for ComputedState {
     }
 }
 
-/// 计算信号
-///
-/// 计算信号是基于其他信号自动计算衍生值的特殊信号类型。
-/// 它懒惰地计算，并且只在依赖发生变化时重新计算。
 pub struct ComputedSignal<T, F>
 where
     F: Fn() -> T + 'static,
     T: Clone + 'static,
 {
-    /// 计算函数
     compute_fn: F,
-    /// 缓存的计算结果
     cached_value: RefCell<Option<T>>,
-    /// 底层信号
     signal: Signal<T>,
-    /// 计算状态
     state: Rc<RefCell<ComputedState>>,
 }
 
@@ -46,18 +35,12 @@ where
     F: Fn() -> T + 'static,
     T: Clone + 'static,
 {
-    /// 创建新的计算信号
-    ///
-    /// # 参数
-    ///
-    /// * `compute_fn` - 计算函数，返回计算结果
     fn new(compute_fn: F) -> Self {
         let state = Rc::new(RefCell::new(ComputedState {
             dirty: true,
             dependencies: HashSet::new(),
         }));
         
-        // 创建带有虚拟初始值的信号，稍后会更新
         let dummy_value = unsafe { std::mem::zeroed() };
         let signal = Signal::new(dummy_value);
 
@@ -69,9 +52,6 @@ where
         }
     }
 
-    /// 获取计算值
-    ///
-    /// 如果依赖发生变化，则重新计算值，否则返回缓存的值
     pub fn value(&self) -> T {
         if self.state.borrow().dirty || self.cached_value.borrow().is_none() {
             // 设置当前计算上下文
