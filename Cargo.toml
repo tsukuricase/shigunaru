@@ -1,16 +1,16 @@
 [package]
 name = "shigunaru"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 authors = ["jaleverchen@gmail.com>"]
 description = "A lightweight reactive signals library in Rust"
-repository = "https://github.com/yourusername/shigunaru"
+repository = "https://github.com/tsukuricase/shigunaru"
 license = "MIT"
 readme = "README.md"
 keywords = ["reactive", "signals", "state-management", "computed", "effects"]
 categories = ["rust-patterns", "gui", "web-programming"]
 documentation = "https://docs.rs/shigunaru"
-homepage = "https://github.com/yourusername/shigunaru"
+homepage = "https://github.com/tsukuricase/shigunaru"
 
 [lib]
 name = "shigunaru"
