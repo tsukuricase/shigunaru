@@ -1,7 +1,7 @@
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
-use crate::registry::{get_next_signal_id, register_dependency, mark_dependents_dirty};
+use crate::registry::{get_next_signal_id, mark_dependents_dirty, register_dependency};
 
 pub struct Signal<T> {
     value: Rc<RefCell<T>>,
@@ -35,9 +35,9 @@ impl<T> Signal<T> {
 
     pub fn set(&self, new_value: T) {
         *self.value.borrow_mut() = new_value;
-        
+
         mark_dependents_dirty(self.id);
-        
+
         self.notify();
     }
 
@@ -50,7 +50,7 @@ impl<T> Signal<T> {
             sub();
         }
     }
-    
+
     pub fn id(&self) -> usize {
         self.id
     }
@@ -58,4 +58,4 @@ impl<T> Signal<T> {
     pub(crate) fn set_silent(&self, new_value: T) {
         *self.value.borrow_mut() = new_value;
     }
-} 
+}

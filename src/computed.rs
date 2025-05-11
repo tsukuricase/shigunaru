@@ -1,9 +1,9 @@
-use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::HashSet;
+use std::rc::Rc;
 
+use crate::registry::{register_dependent, set_current_computed};
 use crate::signal::Signal;
-use crate::registry::{set_current_computed, register_dependent};
 
 pub struct ComputedState {
     pub dirty: bool,
@@ -40,7 +40,7 @@ where
             dirty: true,
             dependencies: HashSet::new(),
         }));
-        
+
         let dummy_value = unsafe { std::mem::zeroed() };
         let signal = Signal::new(dummy_value);
 
@@ -55,38 +55,37 @@ where
     pub fn value(&self) -> T {
         if self.state.borrow().dirty || self.cached_value.borrow().is_none() {
             let prev = set_current_computed(Some(self.state.clone()));
-            
+
             self.state.borrow_mut().dependencies.clear();
-            
+
             let new_value = (self.compute_fn)();
             *self.cached_value.borrow_mut() = Some(new_value.clone());
-            
+
             self.signal.set_silent(new_value);
-            
+
             self.state.borrow_mut().dirty = false;
-            
+
             set_current_computed(prev);
-            
+
             let state_clone = self.state.clone();
-            
+
             for dep_id in self.state.borrow().dependencies.iter() {
                 register_dependent(*dep_id, state_clone.clone());
             }
         }
-        
+
         self.cached_value.borrow().clone().unwrap()
     }
-    
+
     pub fn signal(&self) -> &Signal<T> {
         &self.signal
     }
 }
 
-
 pub fn create_computed<T: Clone + 'static, F: Fn() -> T + 'static>(f: F) -> ComputedSignal<T, F> {
     let computed = ComputedSignal::new(f);
-    
+
     computed.value();
-    
+
     computed
-} 
+}

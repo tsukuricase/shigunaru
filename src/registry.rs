@@ -1,6 +1,6 @@
-use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 use crate::computed::ComputedState;
 
@@ -37,7 +37,9 @@ pub fn mark_dependents_dirty(signal_id: usize) {
     });
 }
 
-pub fn set_current_computed(state: Option<Rc<RefCell<ComputedState>>>) -> Option<Rc<RefCell<ComputedState>>> {
+pub fn set_current_computed(
+    state: Option<Rc<RefCell<ComputedState>>>,
+) -> Option<Rc<RefCell<ComputedState>>> {
     CURRENT_COMPUTED.with(|current| {
         let prev = current.borrow().clone();
         *current.borrow_mut() = state;
@@ -51,4 +53,4 @@ pub fn register_dependency(signal_id: usize) {
             computed.borrow_mut().dependencies.insert(signal_id);
         }
     });
-} 
+}
