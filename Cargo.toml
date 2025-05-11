@@ -2,15 +2,32 @@
 name = "shigunaru"
 version = "0.1.0"
 edition = "2021"
-authors = ["Your Name <your.email@example.com>"]
+authors = ["jaleverchen@gmail.com>"]
 description = "A lightweight reactive signals library in Rust"
 repository = "https://github.com/yourusername/shigunaru"
 license = "MIT"
 readme = "README.md"
-keywords = ["reactive", "signals", "state-management"]
-categories = ["rust-patterns"]
+keywords = ["reactive", "signals", "state-management", "computed", "effects"]
+categories = ["rust-patterns", "gui", "web-programming"]
+documentation = "https://docs.rs/shigunaru"
+homepage = "https://github.com/yourusername/shigunaru"
+
+[lib]
+name = "shigunaru"
+path = "src/lib.rs"
+
+[[bin]]
+name = "shigunaru"
+path = "src/main.rs"
 
 [dependencies]
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "signal_benchmark"
+harness = false
 
 [[example]]
 name = "counter"

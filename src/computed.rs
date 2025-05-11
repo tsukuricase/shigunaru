@@ -54,28 +54,21 @@ where
 
     pub fn value(&self) -> T {
         if self.state.borrow().dirty || self.cached_value.borrow().is_none() {
-            // 设置当前计算上下文
             let prev = set_current_computed(Some(self.state.clone()));
             
-            // 清除之前的依赖
             self.state.borrow_mut().dependencies.clear();
             
-            // 计算新值
             let new_value = (self.compute_fn)();
             *self.cached_value.borrow_mut() = Some(new_value.clone());
             
-            // 更新信号值
             self.signal.set_silent(new_value);
             
             self.state.borrow_mut().dirty = false;
             
-            // 恢复之前的上下文
             set_current_computed(prev);
             
-            // 订阅所有依赖
             let state_clone = self.state.clone();
             
-            // 将此计算信号注册为每个依赖信号的依赖者
             for dep_id in self.state.borrow().dependencies.iter() {
                 register_dependent(*dep_id, state_clone.clone());
             }
